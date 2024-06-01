@@ -1,5 +1,7 @@
 "use client";
+
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Result = {
   status: "success" | "fail";
@@ -11,6 +13,7 @@ export default function UploadForm() {
   const fileInput = useRef<HTMLInputElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState<Result>(null);
+  const router = useRouter();
 
   async function uploadFile(
     evt: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -43,7 +46,14 @@ export default function UploadForm() {
 
   return (
     <form className="flex flex-col gap-4">
-      {renderResult()}
+      <div>
+        {result && (
+          <div>
+            {renderResult()}
+            <button onClick={() => router.reload()}>Show newest upload</button>
+          </div>
+        )}
+      </div>
       <label>
         <span>Name</span>
         <input type="text" name="name" ref={nameInput} />
