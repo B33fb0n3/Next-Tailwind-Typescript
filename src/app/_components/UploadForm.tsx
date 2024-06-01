@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 type Result = {
   status: "success" | "fail";
@@ -30,7 +31,9 @@ export default function UploadForm() {
     });
     const result = await response.json();
     setResult(result);
-    // or directly redirect the client somewhere
+    setTimeout(() => {
+      window.location.reload();
+    }, 2 * 1000);
   }
 
   const renderResult = () => {
