@@ -1,12 +1,19 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+
+type Result = {
+  status: "success" | "fail";
+  results?: any;
+  error?: any;
+};
 
 export default function UploadForm() {
   const fileInput = useRef<HTMLInputElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
+  const [result, setResult] = useState<Result>(null);
 
   async function uploadFile(
-    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
     evt.preventDefault();
 
@@ -19,11 +26,24 @@ export default function UploadForm() {
       body: formData,
     });
     const result = await response.json();
-    console.log(result);
+    setResult(result);
+    // or directly redirect the client somewhere
   }
+
+  const renderResult = () => {
+    if (!result) return null;
+
+    switch (result.status) {
+      case "success":
+        return <p>Upload was successful.</p>;
+      case "fail":
+        return <p>Upload failed.</p>;
+    }
+  };
 
   return (
     <form className="flex flex-col gap-4">
+      {renderResult()}
       <label>
         <span>Name</span>
         <input type="text" name="name" ref={nameInput} />
